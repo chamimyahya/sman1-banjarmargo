@@ -39,7 +39,7 @@
     <article class="biru"><b></b><div><strong>{{ $jumlahBerita }}</strong><span>Berita</span></div></article>
     <article class="hijau"><b></b><div><strong>{{ $jumlahPengumuman }}</strong><span>Pengumuman</span></div></article>
     <article class="kuning"><b></b><div><strong>{{ $jumlahAgenda }}</strong><span>Agenda</span></div></article>
-    <article class="ungu"><b></b><div><strong>8</strong><span>Galeri</span></div></article>
+    <article class="ungu"><b></b><div><strong>{{ $jumlahGaleri }}</strong><span>Galeri</span></div></article>
     <article class="merah"><b></b><div><strong>{{ number_format($hariIni, 0, ',', '.') }}</strong><span>Pengunjung hari ini</span><small>{{ $selisih === null ? 'Belum ada data kemarin' : ($selisih >= 0 ? '+' : '').$selisih.'% dari kemarin' }}</small></div></article>
 </section>
 <section class="kisi">
@@ -71,8 +71,8 @@
             <a class="biru" href="{{ url('/admin/berita') }}">Tulis berita</a>
             <a class="merah" href="{{ url('/admin/pengumuman') }}">Buat pengumuman</a>
             <a class="kuning" href="{{ url('/admin/agenda') }}">Tambah agenda</a>
-            <a class="ungu" href="{{ url('/galeri') }}">Lihat galeri</a>
-            <a class="hijau" href="{{ url('/ppdb') }}">Kelola PPDB</a>
+            <a class="ungu" href="{{ url('/admin/galeri') }}">Unggah galeri</a>
+            <a class="hijau" href="{{ url('/admin/ppdb') }}">Kelola PPDB</a>
             <a class="biru-muda" href="{{ url('/admin/pesan') }}">Pesan masuk</a>
         </div>
     </article>

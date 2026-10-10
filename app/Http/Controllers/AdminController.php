@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use App\Models\Berita;
+use App\Models\GaleriFoto;
 use App\Models\Kunjungan;
 use App\Models\Pengumuman;
 use App\Models\Pesan;
@@ -76,6 +77,7 @@ class AdminController extends Controller
             'jumlahBerita' => Berita::query()->count(),
             'jumlahPengumuman' => Pengumuman::query()->count(),
             'jumlahAgenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->count(),
+            'jumlahGaleri' => $this->jumlahAman(GaleriFoto::class),
             'berita' => Berita::query()->orderByDesc('tanggal')->take(5)->get(),
             'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->take(5)->get(),
             'agenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->orderBy('tanggal')->take(5)->get(),
@@ -144,6 +146,15 @@ class AdminController extends Controller
     public function halamanPengaturan()
     {
         return view('admin.pengaturan');
+    }
+
+    private function jumlahAman(string $model): int
+    {
+        try {
+            return $model::query()->count();
+        } catch (Throwable) {
+            return 0;
+        }
     }
 
     private function cari(string $model, Request $request)

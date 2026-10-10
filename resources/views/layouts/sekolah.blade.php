@@ -24,9 +24,12 @@
                     <a href="{{ url('/profil') }}">Profil</a>
                     <a href="{{ url('/akademik') }}">Akademik</a>
                     <a href="{{ url('/kesiswaan') }}">Kesiswaan</a>
+                    <a href="{{ url('/guru') }}">Guru</a>
+                    <a href="{{ url('/prestasi') }}">Prestasi</a>
                     <a href="{{ url('/pengumuman') }}">Pengumuman</a>
                     <a href="{{ url('/berita') }}">Berita</a>
                     <a href="{{ url('/galeri') }}">Galeri</a>
+                    <a href="{{ url('/unduhan') }}">Unduhan</a>
                     <a href="{{ url('/ppdb') }}">PPDB</a>
                     <a href="{{ url('/kontak') }}">Kontak</a>
                     <a href="{{ url('/admin') }}">Admin</a>

@@ -4,7 +4,7 @@
 <section class="halaman">
     <p class="kecil">Akademik</p>
     <h1>Belajar lima hari, dari pagi sampai selesai</h1>
-    <p>Mata pelajaran mengikuti struktur SMA yang ditetapkan pemerintah dan dapat berubah sesuai kurikulum tahun berjalan. Daftar ini gambaran umum, bukan jadwal resmi semester ini.</p>
+    <p>{{ $pengantar }}</p>
     <div class="agenda">
         <article><strong>5 hari</strong><span>Senin sampai Jumat</span></article>
         <article><strong>Sehari penuh</strong><span>Bukan sistem masuk siang</span></article>
