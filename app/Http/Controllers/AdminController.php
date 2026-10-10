@@ -8,7 +8,10 @@ use App\Models\GaleriFoto;
 use App\Models\Kunjungan;
 use App\Models\Pengumuman;
 use App\Models\Pesan;
+use App\Models\Prestasi;
 use App\Models\User;
+use App\Support\Atur;
+use App\Support\Berkas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -55,7 +58,7 @@ class AdminController extends Controller
 
     public function dasbor(Request $request)
     {
-        $hari = collect(range(6, 0))->map(fn (int $i) => now()->startOfDay()->subDays($i));
+        $hari = collect(range(29, 0))->map(fn (int $i) => now()->startOfDay()->subDays($i));
         try {
             $peta = Kunjungan::query()->get()->mapWithKeys(
                 fn (Kunjungan $baris) => [$baris->tanggal->toDateString() => $baris->jumlah],
@@ -78,6 +81,7 @@ class AdminController extends Controller
             'jumlahPengumuman' => Pengumuman::query()->count(),
             'jumlahAgenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->count(),
             'jumlahGaleri' => $this->jumlahAman(GaleriFoto::class),
+            'jumlahPrestasi' => $this->jumlahAman(Prestasi::class),
             'berita' => Berita::query()->orderByDesc('tanggal')->take(5)->get(),
             'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->take(5)->get(),
             'agenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->orderBy('tanggal')->take(5)->get(),
@@ -135,17 +139,52 @@ class AdminController extends Controller
         ]);
     }
 
-    public function halamanPesan()
+    public function halamanPesan(Request $request)
     {
-        $pesan = Pesan::query()->latest()->get();
-        Pesan::query()->whereNull('dibaca_pada')->update(['dibaca_pada' => now()]);
+        $arsip = $request->boolean('arsip');
 
-        return view('admin.pesan', ['pesan' => $pesan]);
+        return view('admin.pesan', [
+            'pesan' => Pesan::query()->where('diarsipkan', $arsip)->latest()->get(),
+            'arsip' => $arsip,
+        ]);
     }
 
     public function halamanPengaturan()
     {
-        return view('admin.pengaturan');
+        abort_if(auth()->user()->peran === 'penulis', 403);
+
+        return view('admin.pengaturan', [
+            'seo' => Atur::ambil('seo', 'Situs SMAN 1 Banjar Margo'),
+            'instagram' => Atur::ambil('instagram', ''),
+            'facebook' => Atur::ambil('facebook', ''),
+            'youtube' => Atur::ambil('youtube', ''),
+            'logo' => Atur::ambil('logo', ''),
+        ]);
+    }
+
+    public function simpanIdentitas(Request $request)
+    {
+        abort_if(auth()->user()->peran === 'penulis', 403);
+        $data = $request->validate([
+            'seo' => ['nullable', 'string', 'max:180'],
+            'instagram' => ['nullable', 'string', 'max:160'],
+            'facebook' => ['nullable', 'string', 'max:160'],
+            'youtube' => ['nullable', 'string', 'max:160'],
+            'logo' => ['nullable', 'file', 'max:2048', 'mimes:jpg,jpeg,png,webp'],
+        ]);
+        $isi = [
+            'seo' => $data['seo'] ?? '',
+            'instagram' => $data['instagram'] ?? '',
+            'facebook' => $data['facebook'] ?? '',
+            'youtube' => $data['youtube'] ?? '',
+        ];
+        if ($request->hasFile('logo')) {
+            Berkas::buang(Atur::ambil('logo'));
+            $isi['logo'] = Berkas::simpan($request->file('logo'));
+        }
+        Atur::isi($isi);
+
+        return back()->with('status', 'Identitas situs disimpan.');
     }
 
     private function jumlahAman(string $model): int
@@ -173,14 +212,14 @@ class AdminController extends Controller
 
     public function simpanPengumuman(Request $request)
     {
-        Pengumuman::query()->create($this->naskah($request));
+        Pengumuman::query()->create($this->dataPengumuman($request));
 
         return back()->with('status', 'Pengumuman ditambahkan.');
     }
 
     public function perbaruiPengumuman(Request $request, Pengumuman $pengumuman)
     {
-        $pengumuman->update($this->naskah($request));
+        $pengumuman->update($this->dataPengumuman($request));
 
         return redirect('/admin/pengumuman')->with('status', 'Pengumuman diperbarui.');
     }
@@ -194,20 +233,21 @@ class AdminController extends Controller
 
     public function simpanBerita(Request $request)
     {
-        Berita::query()->create($this->naskah($request));
+        Berita::query()->create($this->dataBerita($request));
 
         return back()->with('status', 'Berita ditambahkan.');
     }
 
     public function perbaruiBerita(Request $request, Berita $berita)
     {
-        $berita->update($this->naskah($request));
+        $berita->update($this->dataBerita($request, $berita));
 
         return redirect('/admin/berita')->with('status', 'Berita diperbarui.');
     }
 
     public function hapusBerita(Berita $berita)
     {
+        Berkas::buang($berita->gambar);
         $berita->delete();
 
         return back()->with('status', 'Berita dihapus.');
@@ -255,13 +295,67 @@ class AdminController extends Controller
         return back()->with('status', 'Pesan dihapus.');
     }
 
+    public function bacaPesan(Pesan $pesan)
+    {
+        $pesan->update(['dibaca_pada' => now()]);
+
+        return back();
+    }
+
+    public function arsipPesan(Pesan $pesan)
+    {
+        $pesan->update(['diarsipkan' => ! $pesan->diarsipkan]);
+
+        return back()->with('status', 'Arsip pesan diperbarui.');
+    }
+
+    public function balasPesan(Request $request, Pesan $pesan)
+    {
+        $data = $request->validate(['balasan' => ['required', 'string', 'max:2000']]);
+        $pesan->update([
+            'balasan' => $data['balasan'],
+            'dibaca_pada' => $pesan->dibaca_pada ?? now(),
+        ]);
+
+        return back()->with('status', 'Balasan disimpan di panel. Tidak dikirim ke surel pengirim.');
+    }
+
     private function dataAgenda(Request $request): array
     {
         return $request->validate([
             'tanggal' => ['required', 'date'],
             'judul' => ['required', 'string', 'max:160'],
             'tempat' => ['required', 'string', 'max:160'],
+            'kategori' => ['required', 'in:sekolah,akademik,kesiswaan,rapat'],
+            'deskripsi' => ['nullable', 'string', 'max:1000'],
         ]);
+    }
+
+    private function dataPengumuman(Request $request): array
+    {
+        $data = $this->naskah($request);
+        $data['penting'] = $request->boolean('penting');
+        $data['tampil_beranda'] = $request->boolean('tampil_beranda');
+
+        return $data;
+    }
+
+    private function dataBerita(Request $request, ?Berita $lama = null): array
+    {
+        $data = $this->naskah($request);
+        $tambah = $request->validate([
+            'kategori' => ['required', 'in:kegiatan,akademik,prestasi,umum'],
+            'status' => ['required', 'in:terbit,draf'],
+            'gambar' => ['nullable', 'file', 'max:4096', 'mimes:jpg,jpeg,png,webp'],
+        ]);
+        $data['kategori'] = $tambah['kategori'];
+        $data['status'] = $tambah['status'];
+        if ($request->hasFile('gambar')) {
+            Berkas::buang($lama?->gambar);
+            $data['gambar'] = Berkas::simpan($request->file('gambar'));
+        }
+
+        return $data;
     }
 
     private function naskah(Request $request): array

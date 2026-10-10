@@ -36,6 +36,8 @@ footer { padding: 28px 0 40px; color: #6b6280; }
 .judul-bar, .baris { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .status { background: #ecfdf3; color: #166534; padding: 10px 12px; border-radius: 10px; }
 .salah { color: #b91c1c; margin: 0; }
+dialog { border: 0; border-radius: 16px; padding: 12px; max-width: min(900px, 92vw); }
+dialog img { width: 100%; height: auto; display: block; }
 .tombol.senyap { background: transparent; color: var(--ungu); border: 1px solid var(--ungu); }
 .tombol.bahaya { background: #9f1239; }
 button.tombol { border: 0; cursor: pointer; }

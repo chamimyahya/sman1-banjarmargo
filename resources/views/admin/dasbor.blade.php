@@ -39,12 +39,12 @@
     <article class="biru"><b></b><div><strong>{{ $jumlahBerita }}</strong><span>Berita</span></div></article>
     <article class="hijau"><b></b><div><strong>{{ $jumlahPengumuman }}</strong><span>Pengumuman</span></div></article>
     <article class="kuning"><b></b><div><strong>{{ $jumlahAgenda }}</strong><span>Agenda</span></div></article>
-    <article class="ungu"><b></b><div><strong>{{ $jumlahGaleri }}</strong><span>Galeri</span></div></article>
-    <article class="merah"><b></b><div><strong>{{ number_format($hariIni, 0, ',', '.') }}</strong><span>Pengunjung hari ini</span><small>{{ $selisih === null ? 'Belum ada data kemarin' : ($selisih >= 0 ? '+' : '').$selisih.'% dari kemarin' }}</small></div></article>
+    <article class="ungu"><b></b><div><strong>{{ $jumlahPrestasi }}</strong><span>Prestasi</span></div></article>
+    <article class="merah"><b></b><div><strong>{{ $jumlahGaleri }}</strong><span>Galeri</span><small>{{ $hariIni }} kunjungan hari ini</small></div></article>
 </section>
 <section class="kisi">
     <article class="panel">
-        <div class="kepala-panel"><h2>Statistik kunjungan website</h2><span>7 hari</span></div>
+        <div class="kepala-panel"><h2>Statistik kunjungan website</h2><span>30 hari terakhir</span></div>
         <svg class="grafik" viewBox="0 0 640 210" role="img" aria-label="Grafik kunjungan tujuh hari">
             <text x="8" y="22" fill="#9a93ad" font-size="11">{{ $maks }}</text>
             <text x="8" y="96" fill="#9a93ad" font-size="11">{{ (int) round($maks / 2) }}</text>
@@ -60,7 +60,9 @@
         </svg>
         <div class="sumbu">
             @foreach ($koordinat as $p)
-                <span>{{ $p['label'] }}</span>
+                @if ($loop->first || $loop->last || $loop->iteration % 5 === 0)
+                    <span>{{ $p['label'] }}</span>
+                @endif
             @endforeach
         </div>
         <p class="catatan">Hitungan buka halaman situs. Bukan jumlah siswa.</p>

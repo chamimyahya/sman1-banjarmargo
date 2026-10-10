@@ -4,6 +4,9 @@
 <section class="halaman sempit">
     <h1>PPDB</h1>
     <p>{{ $pengantar }}</p>
+    @if ($tahun)<p><strong>Tahun ajaran:</strong> {{ $tahun }}</p>@endif
+    @if ($syarat)<h2>Syarat</h2><p class="isi">{{ $syarat }}</p>@endif
+    @if ($jadwal)<h2>Jadwal</h2><p class="isi">{{ $jadwal }}</p>@endif
     <ol class="langkah">
         <li>Pantau pengumuman di situs dan papan sekolah.</li>
         <li>Siapkan kartu keluarga, ijazah atau surat keterangan, dan pas foto.</li>

@@ -15,6 +15,14 @@
     </div>
 </section>
 <section class="halaman">
+    <h2>Pengurus OSIS</h2>
+    <div class="agenda">
+        @forelse ($pengurus as $item)
+            <article><b>{{ $item->jabatan }}</b><strong>{{ $item->nama }}</strong></article>
+        @empty
+            <p>Pengurus belum diisi dari panel admin.</p>
+        @endforelse
+    </div>
     <h2>Kegiatan</h2>
     <div class="agenda">
         @forelse ($ekskul as $item)

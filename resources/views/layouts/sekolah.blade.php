@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ $deskripsiSitus ?? 'Situs SMAN 1 Banjar Margo' }}">
     <title>@yield('judul', 'SMAN 1 Banjar Margo')</title>
     <link rel="stylesheet" href="{{ asset('css/sekolah.css') }}">
 </head>
@@ -20,6 +21,11 @@
             <details class="menu">
                 <summary>Menu</summary>
                 <nav>
+                    @if (($menuSitus ?? collect())->isNotEmpty())
+                        @foreach ($menuSitus as $item)
+                            <a href="{{ str_starts_with($item->tautan, 'http') ? $item->tautan : url($item->tautan) }}">{{ $item->label }}</a>
+                        @endforeach
+                    @else
                     <a href="{{ url('/') }}">Beranda</a>
                     <a href="{{ url('/profil') }}">Profil</a>
                     <a href="{{ url('/akademik') }}">Akademik</a>
@@ -29,10 +35,12 @@
                     <a href="{{ url('/pengumuman') }}">Pengumuman</a>
                     <a href="{{ url('/berita') }}">Berita</a>
                     <a href="{{ url('/galeri') }}">Galeri</a>
+                    <a href="{{ url('/fasilitas') }}">Fasilitas</a>
                     <a href="{{ url('/unduhan') }}">Unduhan</a>
                     <a href="{{ url('/ppdb') }}">PPDB</a>
                     <a href="{{ url('/kontak') }}">Kontak</a>
                     <a href="{{ url('/admin') }}">Admin</a>
+                    @endif
                 </nav>
             </details>
         </div>

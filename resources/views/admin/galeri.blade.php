@@ -5,6 +5,13 @@
 <form class="formulir" method="post" action="{{ url('/admin/galeri') }}" enctype="multipart/form-data">
     @csrf
     <label>Judul <input type="text" name="judul" required></label>
+    <label>Kategori
+        <select name="kategori">
+            <option value="kegiatan">Kegiatan</option>
+            <option value="fasilitas">Fasilitas</option>
+            <option value="prestasi">Prestasi</option>
+        </select>
+    </label>
     <label>Foto <input type="file" name="berkas" accept=".jpg,.jpeg,.png,.webp" required></label>
     <button type="submit">Unggah</button>
 </form>

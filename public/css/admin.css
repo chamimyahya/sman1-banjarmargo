@@ -48,7 +48,9 @@ main { padding: 0 22px 28px; }
 .kepala-panel { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
 .kepala-panel a, .kepala-panel span { color: var(--ungu); text-decoration: none; font-size: 13px; font-weight: 700; }
 .grafik { width: 100%; height: 220px; display: block; }
-.sumbu { display: grid; grid-template-columns: repeat(7, 1fr); font-size: 12px; color: #6b6280; text-align: center; margin-left: 36px; }
+.sumbu { display: flex; justify-content: space-between; gap: 2px; font-size: 10px; color: #6b6280; margin-left: 36px; overflow: hidden; }
+.centang { display: flex !important; align-items: center; gap: 8px; font-weight: 600; }
+select { font: inherit; padding: 10px 12px; border: 1px solid var(--garis); border-radius: 10px; background: #fff; }
 .akses { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
 .akses a { text-decoration: none; border-radius: 14px; padding: 14px 12px; font-weight: 700; font-size: 14px; }
 .akses .biru { background: #e0e7ff; color: #3730a3; }

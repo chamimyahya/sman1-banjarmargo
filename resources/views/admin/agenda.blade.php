@@ -7,6 +7,14 @@
     <label>Tanggal <input type="date" name="tanggal" value="{{ old('tanggal', $ubah ? $ubah->tanggal->toDateString() : now()->toDateString()) }}" required></label>
     <label>Kegiatan <input type="text" name="judul" maxlength="160" value="{{ old('judul', $ubah->judul ?? '') }}" required></label>
     <label>Tempat <input type="text" name="tempat" maxlength="160" value="{{ old('tempat', $ubah->tempat ?? '') }}" required></label>
+    <label>Kategori
+        <select name="kategori">
+            @foreach (['sekolah' => 'Sekolah', 'akademik' => 'Akademik', 'kesiswaan' => 'Kesiswaan', 'rapat' => 'Rapat'] as $nilai => $label)
+                <option value="{{ $nilai }}" @selected(old('kategori', $ubah->kategori ?? 'sekolah') === $nilai)>{{ $label }}</option>
+            @endforeach
+        </select>
+    </label>
+    <label>Deskripsi <textarea name="deskripsi" rows="3">{{ old('deskripsi', $ubah->deskripsi ?? '') }}</textarea></label>
     <button type="submit">{{ $ubah ? 'Simpan perubahan' : 'Simpan agenda' }}</button>
 </form>
 @foreach ($agenda as $item)

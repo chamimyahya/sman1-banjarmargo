@@ -5,6 +5,8 @@
 <form class="formulir" method="post" action="{{ $ubah ? url('/admin/pengumuman/'.$ubah->id) : url('/admin/pengumuman') }}">
     @csrf
     @include('admin.bidang')
+    <label class="centang"><input type="checkbox" name="penting" value="1" @checked(old('penting', $ubah->penting ?? false))> Pengumuman penting</label>
+    <label class="centang"><input type="checkbox" name="tampil_beranda" value="1" @checked(old('tampil_beranda', $ubah->tampil_beranda ?? true))> Tampil di beranda</label>
     <button type="submit">{{ $ubah ? 'Simpan perubahan' : 'Simpan pengumuman' }}</button>
 </form>
 @foreach ($pengumuman as $item)

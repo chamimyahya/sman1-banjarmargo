@@ -8,5 +8,5 @@ class Prestasi extends Model
 {
     protected $table = 'prestasi';
 
-    protected $fillable = ['judul', 'tingkat', 'tahun', 'keterangan'];
+    protected $fillable = ['judul', 'tingkat', 'tahun', 'keterangan', 'kategori', 'berkas'];
 }

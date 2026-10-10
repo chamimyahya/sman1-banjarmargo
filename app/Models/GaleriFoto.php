@@ -8,5 +8,5 @@ class GaleriFoto extends Model
 {
     protected $table = 'galeri_foto';
 
-    protected $fillable = ['judul', 'berkas'];
+    protected $fillable = ['judul', 'berkas', 'kategori'];
 }

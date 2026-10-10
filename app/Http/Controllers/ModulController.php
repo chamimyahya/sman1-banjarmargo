@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ekskul;
+use App\Models\Fasilitas;
 use App\Models\GaleriFoto;
 use App\Models\Guru;
 use App\Models\Halaman;
+use App\Models\MenuSitus;
+use App\Models\Pengurus;
 use App\Models\Prestasi;
 use App\Models\Siswa;
 use App\Models\Unduhan;
 use App\Models\User;
 use App\Support\Atur;
+use App\Support\Berkas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -36,6 +40,9 @@ class ModulController extends Controller
             'email' => ['required', 'email', 'max:120'],
             'alamat' => ['required', 'string', 'max:240'],
             'sejarah' => ['required', 'string', 'max:2000'],
+            'visi' => ['required', 'string', 'max:500'],
+            'misi' => ['required', 'string', 'max:1000'],
+            'sambutan' => ['required', 'string', 'max:1000'],
         ]));
 
         return back()->with('status', 'Profil sekolah disimpan.');
@@ -45,6 +52,7 @@ class ModulController extends Controller
     {
         return view('admin.akademik', [
             'pengantar' => Atur::ambil('akademik_pengantar', $this->bawaanAkademik()),
+            'jadwal' => Atur::ambil('akademik_jadwal', 'Jadwal pelajaran resmi diumumkan wali kelas.'),
         ]);
     }
 
@@ -52,6 +60,7 @@ class ModulController extends Controller
     {
         Atur::isi($request->validate([
             'akademik_pengantar' => ['required', 'string', 'max:2000'],
+            'akademik_jadwal' => ['required', 'string', 'max:2000'],
         ]));
 
         return back()->with('status', 'Pengantar akademik disimpan.');
@@ -61,6 +70,9 @@ class ModulController extends Controller
     {
         return view('admin.ppdb', [
             'pengantar' => Atur::ambil('ppdb_pengantar', $this->bawaanPpdb()),
+            'tahun' => Atur::ambil('ppdb_tahun', now()->year.'/'.(now()->year + 1)),
+            'syarat' => Atur::ambil('ppdb_syarat', 'Syarat resmi diumumkan sekolah.'),
+            'jadwal' => Atur::ambil('ppdb_jadwal', 'Jadwal resmi diumumkan sekolah.'),
         ]);
     }
 
@@ -68,6 +80,9 @@ class ModulController extends Controller
     {
         Atur::isi($request->validate([
             'ppdb_pengantar' => ['required', 'string', 'max:2000'],
+            'ppdb_tahun' => ['required', 'string', 'max:20'],
+            'ppdb_syarat' => ['required', 'string', 'max:2000'],
+            'ppdb_jadwal' => ['required', 'string', 'max:2000'],
         ]));
 
         return back()->with('status', 'Teks PPDB disimpan.');
@@ -80,11 +95,21 @@ class ModulController extends Controller
 
     public function simpanGuru(Request $request)
     {
-        Guru::query()->create($request->validate([
+        $data = $request->validate([
             'nama' => ['required', 'string', 'max:120'],
             'jabatan' => ['required', 'string', 'max:80'],
             'tugas' => ['nullable', 'string', 'max:160'],
-        ]));
+            'mapel' => ['nullable', 'string', 'max:80'],
+            'foto' => ['nullable', 'file', 'max:4096', 'mimes:jpg,jpeg,png,webp'],
+        ]);
+        Guru::query()->create([
+            'nama' => $data['nama'],
+            'jabatan' => $data['jabatan'],
+            'tugas' => $data['tugas'] ?? '',
+            'mapel' => $data['mapel'] ?? '',
+            'aktif' => $request->boolean('aktif'),
+            'foto' => $request->hasFile('foto') ? Berkas::simpan($request->file('foto')) : null,
+        ]);
 
         return back()->with('status', 'Guru ditambahkan.');
     }
@@ -92,12 +117,15 @@ class ModulController extends Controller
     public function hapusGuru(Guru $guru)
     {
         $guru->delete();
+        Berkas::buang($guru->foto);
 
         return back()->with('status', 'Guru dihapus.');
     }
 
     public function siswa()
     {
+        abort_if(auth()->user()->peran === 'penulis', 403);
+
         return view('admin.siswa', ['siswa' => Siswa::query()->orderBy('kelas')->orderBy('nama')->get()]);
     }
 
@@ -149,18 +177,29 @@ class ModulController extends Controller
 
     public function simpanPrestasi(Request $request)
     {
-        Prestasi::query()->create($request->validate([
+        $data = $request->validate([
             'judul' => ['required', 'string', 'max:160'],
             'tingkat' => ['required', 'string', 'max:40'],
             'tahun' => ['required', 'string', 'max:8'],
+            'kategori' => ['required', 'in:akademik,nonakademik'],
             'keterangan' => ['nullable', 'string', 'max:400'],
-        ]));
+            'berkas' => ['nullable', 'file', 'max:4096', 'mimes:jpg,jpeg,png,webp'],
+        ]);
+        Prestasi::query()->create([
+            'judul' => $data['judul'],
+            'tingkat' => $data['tingkat'],
+            'tahun' => $data['tahun'],
+            'kategori' => $data['kategori'],
+            'keterangan' => $data['keterangan'] ?? '',
+            'berkas' => $request->hasFile('berkas') ? Berkas::simpan($request->file('berkas')) : null,
+        ]);
 
         return back()->with('status', 'Prestasi ditambahkan.');
     }
 
     public function hapusPrestasi(Prestasi $prestasi)
     {
+        Berkas::buang($prestasi->berkas);
         $prestasi->delete();
 
         return back()->with('status', 'Prestasi dihapus.');
@@ -175,11 +214,13 @@ class ModulController extends Controller
     {
         $data = $request->validate([
             'judul' => ['required', 'string', 'max:120'],
+            'kategori' => ['required', 'in:kegiatan,fasilitas,prestasi'],
             'berkas' => ['required', 'file', 'max:4096', 'mimes:jpg,jpeg,png,webp'],
         ]);
         GaleriFoto::query()->create([
             'judul' => $data['judul'],
-            'berkas' => $this->simpanBerkas($request, 'berkas'),
+            'kategori' => $data['kategori'],
+            'berkas' => Berkas::simpan($request->file('berkas')),
         ]);
 
         return back()->with('status', 'Foto galeri ditambahkan.');
@@ -187,7 +228,7 @@ class ModulController extends Controller
 
     public function hapusGaleri(GaleriFoto $galeriFoto)
     {
-        $this->buangBerkas($galeriFoto->berkas);
+        Berkas::buang($galeriFoto->berkas);
         $galeriFoto->delete();
 
         return back()->with('status', 'Foto dihapus.');
@@ -206,7 +247,7 @@ class ModulController extends Controller
         ]);
         Unduhan::query()->create([
             'judul' => $data['judul'],
-            'berkas' => $this->simpanBerkas($request, 'berkas'),
+            'berkas' => Berkas::simpan($request->file('berkas')),
         ]);
 
         return back()->with('status', 'Berkas unduhan ditambahkan.');
@@ -214,7 +255,7 @@ class ModulController extends Controller
 
     public function hapusUnduhan(Unduhan $unduhan)
     {
-        $this->buangBerkas($unduhan->berkas);
+        Berkas::buang($unduhan->berkas);
         $unduhan->delete();
 
         return back()->with('status', 'Unduhan dihapus.');
@@ -256,6 +297,8 @@ class ModulController extends Controller
 
     public function pengguna()
     {
+        abort_if(auth()->user()->peran === 'penulis', 403);
+
         return view('admin.pengguna', ['pengguna' => User::query()->orderBy('name')->get()]);
     }
 
@@ -265,6 +308,7 @@ class ModulController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:160', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)],
+            'peran' => ['required', 'in:admin,penulis'],
         ]));
 
         return back()->with('status', 'Pengguna admin ditambahkan.');
@@ -279,6 +323,125 @@ class ModulController extends Controller
         return back()->with('status', 'Pengguna dihapus.');
     }
 
+        return back()->with('status', 'Pengguna dihapus.');
+    }
+
+    public function fasilitas()
+    {
+        return view('admin.fasilitas', ['fasilitas' => Fasilitas::query()->orderBy('nama')->get()]);
+    }
+
+    public function simpanFasilitas(Request $request)
+    {
+        $data = $request->validate([
+            'nama' => ['required', 'string', 'max:120'],
+            'kategori' => ['required', 'string', 'max:40'],
+            'deskripsi' => ['required', 'string', 'max:500'],
+            'berkas' => ['nullable', 'file', 'max:4096', 'mimes:jpg,jpeg,png,webp'],
+        ]);
+        Fasilitas::query()->create([
+            'nama' => $data['nama'],
+            'kategori' => $data['kategori'],
+            'deskripsi' => $data['deskripsi'],
+            'berkas' => $request->hasFile('berkas') ? Berkas::simpan($request->file('berkas')) : null,
+        ]);
+
+        return back()->with('status', 'Fasilitas ditambahkan.');
+    }
+
+    public function hapusFasilitas(Fasilitas $fasilitas)
+    {
+        Berkas::buang($fasilitas->berkas);
+        $fasilitas->delete();
+
+        return back()->with('status', 'Fasilitas dihapus.');
+    }
+
+    public function menu()
+    {
+        return view('admin.menu', ['menu' => MenuSitus::query()->orderBy('urutan')->get()]);
+    }
+
+    public function simpanMenu(Request $request)
+    {
+        $data = $request->validate([
+            'label' => ['required', 'string', 'max:40'],
+            'tautan' => ['required', 'string', 'max:160'],
+        ]);
+        MenuSitus::query()->create([
+            'label' => $data['label'],
+            'tautan' => $data['tautan'],
+            'urutan' => (int) MenuSitus::query()->max('urutan') + 1,
+            'aktif' => true,
+        ]);
+
+        return back()->with('status', 'Menu ditambahkan.');
+    }
+
+    public function hapusMenu(MenuSitus $menu)
+    {
+        $menu->delete();
+
+        return back()->with('status', 'Menu dihapus.');
+    }
+
+    public function urutMenu(MenuSitus $menu, string $arah)
+    {
+        abort_unless(in_array($arah, ['naik', 'turun'], true), 404);
+        $lain = MenuSitus::query()
+            ->where('urutan', $arah === 'naik' ? '<' : '>', $menu->urutan)
+            ->orderBy('urutan', $arah === 'naik' ? 'desc' : 'asc')
+            ->first();
+        if ($lain) {
+            $sementara = $menu->urutan;
+            $menu->update(['urutan' => $lain->urutan]);
+            $lain->update(['urutan' => $sementara]);
+        }
+
+        return back();
+    }
+
+    public function kesiswaan()
+    {
+        return view('admin.kesiswaan', ['pengurus' => Pengurus::query()->orderBy('jabatan')->get()]);
+    }
+
+    public function simpanPengurus(Request $request)
+    {
+        Pengurus::query()->create($request->validate([
+            'nama' => ['required', 'string', 'max:120'],
+            'jabatan' => ['required', 'string', 'max:80'],
+        ]));
+
+        return back()->with('status', 'Pengurus ditambahkan.');
+    }
+
+    public function hapusPengurus(Pengurus $pengurus)
+    {
+        $pengurus->delete();
+
+        return back()->with('status', 'Pengurus dihapus.');
+    }
+
+    public function media()
+    {
+        $dir = public_path('unggah');
+        $berkas = collect(is_dir($dir) ? scandir($dir) : [])
+            ->reject(fn ($nama) => str_starts_with((string) $nama, '.'))
+            ->values();
+
+        return view('admin.media', ['berkas' => $berkas]);
+    }
+
+    public function hapusMedia(Request $request)
+    {
+        $nama = basename((string) $request->input('nama'));
+        abort_unless($nama !== '' && $nama !== '.' && $nama !== '..', 404);
+        Berkas::buang('unggah/'.$nama);
+
+        return back()->with('status', 'Berkas dihapus dari penyimpanan.');
+    }
+
     private function bawaanProfil(): array
     {
         return [
@@ -291,6 +454,9 @@ class ModulController extends Controller
             'email' => 'smanegeri1banjarmargo@yahoo.co.id',
             'alamat' => 'Jl. Lintas Timur Km 159, Bujuk Agung, Banjar Margo, Tulang Bawang, Lampung 34595',
             'sejarah' => 'Sekolah negeri di Bujuk Agung. Berdiri 12 Juli 2006.',
+            'visi' => 'Sekolah yang berilmu, berkarakter, dan berprestasi.',
+            'misi' => 'Menyelenggarakan pembelajaran lima hari dan kegiatan siswa yang tertib.',
+            'sambutan' => 'Selamat datang di situs SMAN 1 Banjar Margo.',
         ];
     }
 
@@ -302,29 +468,5 @@ class ModulController extends Controller
     private function bawaanPpdb(): string
     {
         return 'Halaman ini contoh alur. Syarat, jadwal, dan tautan resmi penerimaan siswa diumumkan oleh sekolah.';
-    }
-
-    private function simpanBerkas(Request $request, string $kolom): string
-    {
-        $file = $request->file($kolom);
-        $ext = strtolower($file->getClientOriginalExtension());
-        $nama = now()->format('YmdHis').'-'.bin2hex(random_bytes(4)).'.'.$ext;
-        $dir = public_path('unggah');
-        if (! is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        $file->move($dir, $nama);
-
-        return 'unggah/'.$nama;
-    }
-
-    private function buangBerkas(?string $path): void
-    {
-        if ($path && str_starts_with($path, 'unggah/')) {
-            $penuh = public_path($path);
-            if (is_file($penuh)) {
-                unlink($penuh);
-            }
-        }
     }
 }

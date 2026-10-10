@@ -10,7 +10,16 @@
         </label>
     @endforeach
     <label>Sejarah singkat
-        <textarea name="sejarah" rows="5" required>{{ old('sejarah', $profil['sejarah']) }}</textarea>
+        <textarea name="sejarah" rows="4" required>{{ old('sejarah', $profil['sejarah']) }}</textarea>
+    </label>
+    <label>Visi
+        <textarea name="visi" rows="3" required>{{ old('visi', $profil['visi']) }}</textarea>
+    </label>
+    <label>Misi
+        <textarea name="misi" rows="3" required>{{ old('misi', $profil['misi']) }}</textarea>
+    </label>
+    <label>Sambutan kepala sekolah
+        <textarea name="sambutan" rows="3" required>{{ old('sambutan', $profil['sambutan']) }}</textarea>
     </label>
     <button type="submit">Simpan profil</button>
 </form>

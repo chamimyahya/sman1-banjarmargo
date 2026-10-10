@@ -7,10 +7,26 @@
     <div class="galeri besar">
         @foreach ($galeri as $item)
             <figure>
-                <img src="{{ asset($item->berkas) }}" alt="{{ $item->judul }}">
-                <figcaption>{{ $item->judul }}</figcaption>
+                <a class="buka-foto" href="{{ asset($item->berkas) }}">
+                    <img src="{{ asset($item->berkas) }}" alt="{{ $item->judul }}">
+                </a>
+                <figcaption>{{ $item->judul }} · {{ $item->kategori ?? 'kegiatan' }}</figcaption>
             </figure>
         @endforeach
     </div>
+    <dialog id="kotak-foto">
+        <img alt="">
+        <form method="dialog"><button>Tutup</button></form>
+    </dialog>
+    <script>
+        const kotak = document.getElementById('kotak-foto');
+        document.querySelectorAll('.buka-foto').forEach((tautan) => {
+            tautan.addEventListener('click', (event) => {
+                event.preventDefault();
+                kotak.querySelector('img').src = tautan.href;
+                kotak.showModal();
+            });
+        });
+    </script>
 </section>
 @endsection

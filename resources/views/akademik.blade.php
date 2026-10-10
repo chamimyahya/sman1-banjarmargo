@@ -5,6 +5,7 @@
     <p class="kecil">Akademik</p>
     <h1>Belajar lima hari, dari pagi sampai selesai</h1>
     <p>{{ $pengantar }}</p>
+    <p>{{ $jadwal }}</p>
     <div class="agenda">
         <article><strong>5 hari</strong><span>Senin sampai Jumat</span></article>
         <article><strong>Sehari penuh</strong><span>Bukan sistem masuk siang</span></article>
