@@ -84,3 +84,6 @@ button.tombol { border: 0; cursor: pointer; }
     .menu nav { display: none; padding-top: 10px; }
     .menu[open] nav { display: flex; flex-direction: column; }
 }
+
+.agenda ul { margin: 8px 0 0; padding-left: 18px; }
+.foto-lebar { width: 100%; height: 280px; object-fit: cover; border-radius: 16px; }

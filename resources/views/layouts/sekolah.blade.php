@@ -22,6 +22,8 @@
                 <nav>
                     <a href="{{ url('/') }}">Beranda</a>
                     <a href="{{ url('/profil') }}">Profil</a>
+                    <a href="{{ url('/akademik') }}">Akademik</a>
+                    <a href="{{ url('/kesiswaan') }}">Kesiswaan</a>
                     <a href="{{ url('/pengumuman') }}">Pengumuman</a>
                     <a href="{{ url('/berita') }}">Berita</a>
                     <a href="{{ url('/galeri') }}">Galeri</a>

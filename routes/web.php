@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SitusController::class, 'beranda']);
 Route::view('/profil', 'profil');
+Route::view('/akademik', 'akademik');
+Route::view('/kesiswaan', 'kesiswaan');
 Route::view('/kontak', 'kontak');
 Route::view('/galeri', 'galeri');
 Route::view('/ppdb', 'ppdb');
@@ -24,5 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/pengumuman/{pengumuman}/hapus', [AdminController::class, 'hapusPengumuman']);
     Route::post('/admin/berita', [AdminController::class, 'simpanBerita']);
     Route::post('/admin/berita/{berita}/hapus', [AdminController::class, 'hapusBerita']);
+    Route::post('/admin/agenda', [AdminController::class, 'simpanAgenda']);
+    Route::post('/admin/agenda/{agenda}/hapus', [AdminController::class, 'hapusAgenda']);
     Route::post('/admin/sandi', [AdminController::class, 'sandi']);
 });

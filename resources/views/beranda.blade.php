@@ -64,13 +64,15 @@
 <section class="halaman">
     <h2>Agenda contoh</h2>
     <div class="agenda">
-        @foreach ($agenda as $item)
+        @forelse ($agenda as $item)
             <article>
-                <b>{{ $item['tanggal'] }}</b>
-                <strong>{{ $item['judul'] }}</strong>
-                <span>{{ $item['tempat'] }}</span>
+                <b>{{ $item->tanggal->translatedFormat('d M') }}</b>
+                <strong>{{ $item->judul }}</strong>
+                <span>{{ $item->tempat }}</span>
             </article>
-        @endforeach
+        @empty
+            <p>Belum ada agenda. Tambah dari panel admin.</p>
+        @endforelse
     </div>
     <p class="catatan">Jadwal di atas contoh, bukan kalender resmi sekolah.</p>
 </section>

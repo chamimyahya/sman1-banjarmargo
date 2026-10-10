@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Pengumuman;
 use App\Models\User;
@@ -53,6 +54,7 @@ class AdminController extends Controller
         return view('admin.dasbor', [
             'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->get(),
             'berita' => Berita::query()->orderByDesc('tanggal')->get(),
+            'agenda' => Agenda::query()->orderBy('tanggal')->get(),
         ]);
     }
 
@@ -82,6 +84,24 @@ class AdminController extends Controller
         $berita->delete();
 
         return back()->with('status', 'Berita dihapus.');
+    }
+
+    public function simpanAgenda(Request $request)
+    {
+        Agenda::query()->create($request->validate([
+            'tanggal' => ['required', 'date'],
+            'judul' => ['required', 'string', 'max:160'],
+            'tempat' => ['required', 'string', 'max:160'],
+        ]));
+
+        return back()->with('status', 'Agenda ditambahkan.');
+    }
+
+    public function hapusAgenda(Agenda $agenda)
+    {
+        $agenda->delete();
+
+        return back()->with('status', 'Agenda dihapus.');
     }
 
     public function sandi(Request $request)

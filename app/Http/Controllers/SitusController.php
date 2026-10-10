@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Pengumuman;
 
@@ -13,11 +14,7 @@ class SitusController extends Controller
             'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->take(4)->get(),
             'berita' => Berita::query()->orderByDesc('tanggal')->take(3)->get(),
             'fotoBerita' => ['images/workshop.jpg', 'images/ujian.jpg', 'images/kelas.jpg'],
-            'agenda' => [
-                ['tanggal' => '12 Okt', 'judul' => 'Contoh rapat orang tua', 'tempat' => 'Aula sekolah'],
-                ['tanggal' => '18 Okt', 'judul' => 'Contoh lomba kelas', 'tempat' => 'Lapangan'],
-                ['tanggal' => '25 Okt', 'judul' => 'Contoh pembagian rapor', 'tempat' => 'Diumumkan wali kelas'],
-            ],
+            'agenda' => Agenda::query()->orderBy('tanggal')->take(6)->get(),
         ]);
     }
 

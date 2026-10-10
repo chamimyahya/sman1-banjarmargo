@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Pengumuman;
 use App\Models\User;
@@ -41,6 +42,19 @@ class DatabaseSeeder extends Seeder
                 'ringkas' => 'Contoh kabar. Belum berita resmi SMAN 1 Banjar Margo.',
                 'isi' => 'Tulis berita kegiatan sekolah dari panel admin. Teks ini sengaja ditandai sebagai contoh.',
             ],
+        );
+
+        Agenda::query()->updateOrCreate(
+            ['judul' => 'Contoh rapat orang tua'],
+            ['tanggal' => '2026-10-12', 'tempat' => 'Aula sekolah'],
+        );
+        Agenda::query()->updateOrCreate(
+            ['judul' => 'Contoh lomba kelas'],
+            ['tanggal' => '2026-10-18', 'tempat' => 'Lapangan'],
+        );
+        Agenda::query()->updateOrCreate(
+            ['judul' => 'Contoh pembagian rapor'],
+            ['tanggal' => '2026-10-25', 'tempat' => 'Diumumkan wali kelas'],
         );
     }
 }
