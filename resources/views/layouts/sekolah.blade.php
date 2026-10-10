@@ -21,7 +21,9 @@
                 <a href="{{ url('/') }}">Beranda</a>
                 <a href="{{ url('/profil') }}">Profil</a>
                 <a href="{{ url('/pengumuman') }}">Pengumuman</a>
+                <a href="{{ url('/berita') }}">Berita</a>
                 <a href="{{ url('/kontak') }}">Kontak</a>
+                <a href="{{ url('/admin') }}">Admin</a>
             </nav>
         </div>
     </header>

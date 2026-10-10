@@ -13,13 +13,28 @@
     <article><strong>A</strong><span>Akreditasi</span></article>
     <article><strong>2006</strong><span>Berdiri</span></article>
 </section>
-<section class="daftar">
-    <h2>Pengumuman</h2>
-    @foreach ($pengumuman as $item)
-        <a href="{{ url('/pengumuman/'.$item['id']) }}">
-            <small>{{ $item['tanggal'] }}</small>
-            <strong>{{ $item['judul'] }}</strong>
-        </a>
-    @endforeach
+<section class="dua">
+    <div class="daftar">
+        <h2>Pengumuman</h2>
+        @forelse ($pengumuman as $item)
+            <a href="{{ url('/pengumuman/'.$item->id) }}">
+                <small>{{ $item->tanggal->translatedFormat('d F Y') }}</small>
+                <strong>{{ $item->judul }}</strong>
+            </a>
+        @empty
+            <p>Belum ada pengumuman.</p>
+        @endforelse
+    </div>
+    <div class="daftar">
+        <h2>Berita</h2>
+        @forelse ($berita as $item)
+            <a href="{{ url('/berita/'.$item->id) }}">
+                <small>{{ $item->tanggal->translatedFormat('d F Y') }}</small>
+                <strong>{{ $item->judul }}</strong>
+            </a>
+        @empty
+            <p>Belum ada berita.</p>
+        @endforelse
+    </div>
 </section>
 @endsection

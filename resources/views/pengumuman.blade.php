@@ -3,12 +3,14 @@
 @section('isi')
 <section class="halaman">
     <h1>Pengumuman</h1>
-    @foreach ($pengumuman as $item)
+    @forelse ($pengumuman as $item)
         <article class="kartu">
-            <small>{{ $item['tanggal'] }}</small>
-            <h2><a href="{{ url('/pengumuman/'.$item['id']) }}">{{ $item['judul'] }}</a></h2>
-            <p>{{ $item['ringkas'] }}</p>
+            <small>{{ $item->tanggal->translatedFormat('d F Y') }}</small>
+            <h2><a href="{{ url('/pengumuman/'.$item->id) }}">{{ $item->judul }}</a></h2>
+            <p>{{ $item->ringkas }}</p>
         </article>
-    @endforeach
+    @empty
+        <p>Belum ada pengumuman.</p>
+    @endforelse
 </section>
 @endsection
