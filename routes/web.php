@@ -21,6 +21,10 @@ Route::post('/admin/masuk', [AdminController::class, 'masuk']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminController::class, 'dasbor']);
+    Route::get('/admin/berita', [AdminController::class, 'halamanBerita']);
+    Route::get('/admin/pengumuman', [AdminController::class, 'halamanPengumuman']);
+    Route::get('/admin/agenda', [AdminController::class, 'halamanAgenda']);
+    Route::get('/admin/pengaturan', [AdminController::class, 'halamanPengaturan']);
     Route::post('/admin/keluar', [AdminController::class, 'keluar']);
     Route::post('/admin/pengumuman', [AdminController::class, 'simpanPengumuman']);
     Route::post('/admin/pengumuman/{pengumuman}/hapus', [AdminController::class, 'hapusPengumuman']);

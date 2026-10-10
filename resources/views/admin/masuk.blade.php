@@ -1,19 +1,20 @@
-@extends('layouts.sekolah')
-@section('judul', 'Masuk admin')
-@section('isi')
-<section class="halaman sempit">
-    <h1>Panel admin</h1>
-    <p>Untuk guru atau tata usaha yang mengisi berita dan pengumuman.</p>
-    <form class="formulir" method="post" action="{{ url('/admin/masuk') }}">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Masuk admin — SMAN 1 Banjar Margo</title>
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+</head>
+<body class="halaman-masuk">
+    <form class="formulir kartu-masuk" method="post" action="{{ url('/admin/masuk') }}">
         @csrf
-        <label>Email
-            <input type="email" name="email" value="{{ old('email') }}" required autofocus>
-        </label>
+        <p class="kecil">SMAN 1 Banjar Margo</p>
+        <h1>Masuk admin</h1>
+        <label>Email <input type="email" name="email" value="{{ old('email') }}" required autofocus></label>
         @error('email')<p class="salah">{{ $message }}</p>@enderror
-        <label>Kata sandi
-            <input type="password" name="password" required>
-        </label>
-        <button class="tombol" type="submit">Masuk</button>
+        <label>Kata sandi <input type="password" name="password" required></label>
+        <button type="submit">Masuk</button>
     </form>
-</section>
-@endsection
+</body>
+</html>

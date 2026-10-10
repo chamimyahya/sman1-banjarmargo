@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use App\Models\Berita;
+use App\Models\Kunjungan;
 use App\Models\Pengumuman;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Throwable;
 
 class AdminController extends Controller
 {
@@ -49,13 +51,77 @@ class AdminController extends Controller
         return redirect('/admin/masuk');
     }
 
-    public function dasbor()
+    public function dasbor(Request $request)
     {
+        $hari = collect(range(6, 0))->map(fn (int $i) => now()->startOfDay()->subDays($i));
+        try {
+            $peta = Kunjungan::query()->get()->mapWithKeys(
+                fn (Kunjungan $baris) => [$baris->tanggal->toDateString() => $baris->jumlah],
+            );
+        } catch (Throwable) {
+            $peta = collect();
+        }
+        $seri = $hari->map(fn ($tgl) => [
+            'label' => $tgl->translatedFormat('D'),
+            'jumlah' => (int) ($peta[$tgl->toDateString()] ?? 0),
+        ]);
+        $hariIni = (int) ($peta[now()->toDateString()] ?? 0);
+        $kemarin = (int) ($peta[now()->subDay()->toDateString()] ?? 0);
+
         return view('admin.dasbor', [
-            'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->get(),
+            'seri' => $seri,
+            'hariIni' => $hariIni,
+            'selisih' => $kemarin > 0 ? (int) round((($hariIni - $kemarin) / $kemarin) * 100) : null,
+            'jumlahBerita' => Berita::query()->count(),
+            'jumlahPengumuman' => Pengumuman::query()->count(),
+            'jumlahAgenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->count(),
+            'berita' => Berita::query()->orderByDesc('tanggal')->take(5)->get(),
+            'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->take(5)->get(),
+            'agenda' => Agenda::query()->orderBy('tanggal')->take(5)->get(),
+            'cari' => $request->string('q')->trim()->toString(),
+            'hasilBerita' => $this->cari(Berita::class, $request),
+            'hasilPengumuman' => $this->cari(Pengumuman::class, $request),
+        ]);
+    }
+
+    public function halamanBerita()
+    {
+        return view('admin.berita', [
             'berita' => Berita::query()->orderByDesc('tanggal')->get(),
+        ]);
+    }
+
+    public function halamanPengumuman()
+    {
+        return view('admin.pengumuman', [
+            'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->get(),
+        ]);
+    }
+
+    public function halamanAgenda()
+    {
+        return view('admin.agenda', [
             'agenda' => Agenda::query()->orderBy('tanggal')->get(),
         ]);
+    }
+
+    public function halamanPengaturan()
+    {
+        return view('admin.pengaturan');
+    }
+
+    private function cari(string $model, Request $request)
+    {
+        $kata = str_replace(['%', '_'], ['\\%', '\\_'], $request->string('q')->trim()->toString());
+        if ($kata === '') {
+            return collect();
+        }
+
+        return $model::query()
+            ->where('judul', 'like', '%'.$kata.'%')
+            ->orderByDesc('tanggal')
+            ->take(8)
+            ->get();
     }
 
     public function simpanPengumuman(Request $request)
