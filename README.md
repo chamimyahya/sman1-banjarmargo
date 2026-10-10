@@ -7,8 +7,7 @@ Situs sekolah berbasis Laravel 12 untuk Laragon.
 ```
 cd C:\laragon\www\sman1-banjarmargo
 git pull
-composer install
-if not exist database\database.sqlite type nul > database\database.sqlite
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS sman1_banjarmargo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 php artisan migrate --seed
 ```
 
