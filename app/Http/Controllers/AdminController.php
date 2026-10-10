@@ -78,7 +78,7 @@ class AdminController extends Controller
             'jumlahAgenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->count(),
             'berita' => Berita::query()->orderByDesc('tanggal')->take(5)->get(),
             'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->take(5)->get(),
-            'agenda' => Agenda::query()->orderBy('tanggal')->take(5)->get(),
+            'agenda' => Agenda::query()->whereDate('tanggal', '>=', now()->toDateString())->orderBy('tanggal')->take(5)->get(),
             'cari' => $request->string('q')->trim()->toString(),
             'hasilBerita' => $this->cari(Berita::class, $request),
             'hasilPengumuman' => $this->cari(Pengumuman::class, $request),
