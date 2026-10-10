@@ -18,6 +18,7 @@
             <a href="{{ url('/admin/berita') }}" @class(['aktif' => request()->is('admin/berita')])>Berita</a>
             <a href="{{ url('/admin/pengumuman') }}" @class(['aktif' => request()->is('admin/pengumuman')])>Pengumuman</a>
             <a href="{{ url('/admin/agenda') }}" @class(['aktif' => request()->is('admin/agenda')])>Agenda</a>
+            <a href="{{ url('/admin/pesan') }}" @class(['aktif' => request()->is('admin/pesan')])>Pesan</a>
             <a href="{{ url('/galeri') }}">Galeri</a>
             <a href="{{ url('/admin/pengaturan') }}" @class(['aktif' => request()->is('admin/pengaturan')])>Pengaturan</a>
         </nav>

@@ -70,6 +70,7 @@
             <a href="{{ url('/admin/berita') }}">Tulis berita</a>
             <a href="{{ url('/admin/pengumuman') }}">Tulis pengumuman</a>
             <a href="{{ url('/admin/agenda') }}">Tambah agenda</a>
+            <a href="{{ url('/admin/pesan') }}">Pesan masuk</a>
             <a href="{{ url('/') }}">Lihat situs</a>
         </div>
     </article>

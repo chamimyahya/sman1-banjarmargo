@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Pengumuman;
+use App\Models\Pesan;
+use Illuminate\Http\Request;
 
 class SitusController extends Controller
 {
@@ -40,5 +42,16 @@ class SitusController extends Controller
     public function bacaBerita(Berita $berita)
     {
         return view('berita-baca', ['item' => $berita]);
+    }
+
+    public function kirimPesan(Request $request)
+    {
+        Pesan::query()->create($request->validate([
+            'nama' => ['required', 'string', 'max:80'],
+            'kontak' => ['required', 'string', 'max:120'],
+            'isi' => ['required', 'string', 'max:2000'],
+        ]));
+
+        return back()->with('status', 'Pesan tersimpan di panel admin. Untuk hal mendesak, telepon sekolah.');
     }
 }

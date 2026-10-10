@@ -6,6 +6,7 @@ use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Kunjungan;
 use App\Models\Pengumuman;
+use App\Models\Pesan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,15 @@ class AdminController extends Controller
     {
         return view('admin.berita', [
             'berita' => Berita::query()->orderByDesc('tanggal')->get(),
+            'ubah' => null,
+        ]);
+    }
+
+    public function ubahBerita(Berita $berita)
+    {
+        return view('admin.berita', [
+            'berita' => Berita::query()->orderByDesc('tanggal')->get(),
+            'ubah' => $berita,
         ]);
     }
 
@@ -95,6 +105,15 @@ class AdminController extends Controller
     {
         return view('admin.pengumuman', [
             'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->get(),
+            'ubah' => null,
+        ]);
+    }
+
+    public function ubahPengumuman(Pengumuman $pengumuman)
+    {
+        return view('admin.pengumuman', [
+            'pengumuman' => Pengumuman::query()->orderByDesc('tanggal')->get(),
+            'ubah' => $pengumuman,
         ]);
     }
 
@@ -102,7 +121,24 @@ class AdminController extends Controller
     {
         return view('admin.agenda', [
             'agenda' => Agenda::query()->orderBy('tanggal')->get(),
+            'ubah' => null,
         ]);
+    }
+
+    public function ubahAgenda(Agenda $agenda)
+    {
+        return view('admin.agenda', [
+            'agenda' => Agenda::query()->orderBy('tanggal')->get(),
+            'ubah' => $agenda,
+        ]);
+    }
+
+    public function halamanPesan()
+    {
+        $pesan = Pesan::query()->latest()->get();
+        Pesan::query()->whereNull('dibaca_pada')->update(['dibaca_pada' => now()]);
+
+        return view('admin.pesan', ['pesan' => $pesan]);
     }
 
     public function halamanPengaturan()
@@ -131,6 +167,13 @@ class AdminController extends Controller
         return back()->with('status', 'Pengumuman ditambahkan.');
     }
 
+    public function perbaruiPengumuman(Request $request, Pengumuman $pengumuman)
+    {
+        $pengumuman->update($this->naskah($request));
+
+        return redirect('/admin/pengumuman')->with('status', 'Pengumuman diperbarui.');
+    }
+
     public function hapusPengumuman(Pengumuman $pengumuman)
     {
         $pengumuman->delete();
@@ -145,6 +188,13 @@ class AdminController extends Controller
         return back()->with('status', 'Berita ditambahkan.');
     }
 
+    public function perbaruiBerita(Request $request, Berita $berita)
+    {
+        $berita->update($this->naskah($request));
+
+        return redirect('/admin/berita')->with('status', 'Berita diperbarui.');
+    }
+
     public function hapusBerita(Berita $berita)
     {
         $berita->delete();
@@ -154,13 +204,16 @@ class AdminController extends Controller
 
     public function simpanAgenda(Request $request)
     {
-        Agenda::query()->create($request->validate([
-            'tanggal' => ['required', 'date'],
-            'judul' => ['required', 'string', 'max:160'],
-            'tempat' => ['required', 'string', 'max:160'],
-        ]));
+        Agenda::query()->create($this->dataAgenda($request));
 
         return back()->with('status', 'Agenda ditambahkan.');
+    }
+
+    public function perbaruiAgenda(Request $request, Agenda $agenda)
+    {
+        $agenda->update($this->dataAgenda($request));
+
+        return redirect('/admin/agenda')->with('status', 'Agenda diperbarui.');
     }
 
     public function hapusAgenda(Agenda $agenda)
@@ -182,6 +235,22 @@ class AdminController extends Controller
         $user->save();
 
         return back()->with('status', 'Kata sandi diganti.');
+    }
+
+    public function hapusPesan(Pesan $pesan)
+    {
+        $pesan->delete();
+
+        return back()->with('status', 'Pesan dihapus.');
+    }
+
+    private function dataAgenda(Request $request): array
+    {
+        return $request->validate([
+            'tanggal' => ['required', 'date'],
+            'judul' => ['required', 'string', 'max:160'],
+            'tempat' => ['required', 'string', 'max:160'],
+        ]);
     }
 
     private function naskah(Request $request): array
