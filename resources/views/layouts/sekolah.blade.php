@@ -17,14 +17,19 @@
                 <strong>SMAN 1 Banjar Margo</strong>
                 <small>Berilmu, Berkarakter, Berprestasi</small>
             </a>
-            <nav>
-                <a href="{{ url('/') }}">Beranda</a>
-                <a href="{{ url('/profil') }}">Profil</a>
-                <a href="{{ url('/pengumuman') }}">Pengumuman</a>
-                <a href="{{ url('/berita') }}">Berita</a>
-                <a href="{{ url('/kontak') }}">Kontak</a>
-                <a href="{{ url('/admin') }}">Admin</a>
-            </nav>
+            <details class="menu">
+                <summary>Menu</summary>
+                <nav>
+                    <a href="{{ url('/') }}">Beranda</a>
+                    <a href="{{ url('/profil') }}">Profil</a>
+                    <a href="{{ url('/pengumuman') }}">Pengumuman</a>
+                    <a href="{{ url('/berita') }}">Berita</a>
+                    <a href="{{ url('/galeri') }}">Galeri</a>
+                    <a href="{{ url('/ppdb') }}">PPDB</a>
+                    <a href="{{ url('/kontak') }}">Kontak</a>
+                    <a href="{{ url('/admin') }}">Admin</a>
+                </nav>
+            </details>
         </div>
     </header>
     <main>@yield('isi')</main>

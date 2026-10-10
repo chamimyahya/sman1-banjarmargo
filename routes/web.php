@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SitusController::class, 'beranda']);
 Route::view('/profil', 'profil');
 Route::view('/kontak', 'kontak');
+Route::view('/galeri', 'galeri');
+Route::view('/ppdb', 'ppdb');
 Route::get('/pengumuman', [SitusController::class, 'pengumuman']);
 Route::get('/pengumuman/{pengumuman}', [SitusController::class, 'bacaPengumuman']);
 Route::get('/berita', [SitusController::class, 'berita']);
