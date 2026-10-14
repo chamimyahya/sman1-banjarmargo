@@ -1,0 +1,5 @@
+# Defense-in-depth: never execute server-side or script files from uploaded media.
+Options -Indexes
+<FilesMatch "(?i)\.(php[0-9]*|phtml|phar|cgi|pl|py|sh|asp|aspx|jsp)$">
+    Require all denied
+</FilesMatch>

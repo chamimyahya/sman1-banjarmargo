@@ -1,0 +1,124 @@
+/* Tema publik SMAN 1 Banjar Margo — override terpisah agar CSS bawaan CMS tidak perlu ditimpa. */
+:root {
+  --primary: #5b21b6;
+  --primary-dark: #2e1065;
+  --primary-light: #a78bfa;
+  --accent: #7c3aed;
+  --accent-dark: #6d28d9;
+  --accent-glow: rgba(124, 58, 237, .13);
+  --warm: #f59e0b;
+  --surface: #ffffff;
+  --bg: #f8f7fc;
+  --text: #211a32;
+  --text-soft: #6d647e;
+  --text-muted: #9a91aa;
+  --border: #e8e2f2;
+  --shadow-xl: 0 20px 60px rgba(67, 31, 130, .13);
+  --header-bg: rgba(255,255,255,.96);
+  --header-border: #e9e3f4;
+  --nav-hover: rgba(124,58,237,.07);
+  --nav-active: rgba(124,58,237,.11);
+  --counter-bg: #fff;
+  --card-bg: #fff;
+  --card-border: #e8e2f2;
+  --hero-end: #7c3aed;
+}
+
+[data-theme="dark"] {
+  --primary: #c4b5fd;
+  --primary-dark: #2e1065;
+  --primary-light: #ddd6fe;
+  --accent: #a78bfa;
+  --accent-dark: #8b5cf6;
+  --accent-glow: rgba(167,139,250,.16);
+  --surface: #211a32;
+  --bg: #15111f;
+  --text: #f3effb;
+  --text-soft: #c2b8d4;
+  --text-muted: #9588ad;
+  --border: #3a2e50;
+  --header-bg: rgba(21,17,31,.96);
+  --header-border: #3a2e50;
+  --nav-hover: rgba(167,139,250,.12);
+  --nav-active: rgba(167,139,250,.18);
+  --counter-bg: #211a32;
+  --card-bg: #211a32;
+  --card-border: #3a2e50;
+  --hero-end: #4c1d95;
+}
+
+body { background: var(--bg); }
+.header-top { background: #21103f; color: rgba(255,255,255,.82); }
+.header-top-left i, .header-top-right a:hover { color: #c4b5fd; }
+.header { box-shadow: 0 4px 18px rgba(46,16,101,.045); }
+.logo { color: #2e1065; letter-spacing: -.025em; }
+.logo i, .logo .highlight { color: #7c3aed; }
+.nav a.active, .nav a:hover, .nav-dd-btn:hover { color: #5b21b6; }
+.nav a::after, .nav-dd-btn::after { background: linear-gradient(90deg,#7c3aed,#a78bfa); }
+.nav-spmb { background: linear-gradient(135deg,#6d28d9,#4c1d95) !important; box-shadow: 0 5px 15px rgba(109,40,217,.24); }
+.nav-spmb:hover { background: linear-gradient(135deg,#5b21b6,#7c3aed) !important; box-shadow: 0 8px 20px rgba(109,40,217,.3) !important; }
+.nav-toggle, .dark-toggle { color: #6d28d9; background: #f0eaff; }
+.nav-toggle:hover, .dark-toggle:hover { background: #6d28d9; color: #fff; }
+.hero { background: linear-gradient(132deg,#21103f 0%,#3b167b 47%,#6d28d9 100%); }
+.hero-shape--1 { background: #a78bfa; opacity: .16; }
+.hero-shape--2 { background: #c4b5fd; opacity: .12; }
+.hero-shape--3 { background: #fbbf24; opacity: .1; }
+.hero-badge { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.19); color: #f6f1ff; }
+.hero-content h1 { letter-spacing: -.035em; }
+.hero-content p { color: rgba(250,246,255,.82); }
+.hero-buttons .btn-primary, .contact-form .btn-primary {
+  background: linear-gradient(135deg,#8b5cf6,#6d28d9);
+  box-shadow: 0 7px 20px rgba(76,29,149,.3);
+}
+.hero-buttons .btn-primary:hover, .contact-form .btn-primary:hover { box-shadow: 0 10px 28px rgba(76,29,149,.4); }
+.btn-outline { border-color: rgba(255,255,255,.52); }
+.text-gradient { background-image: linear-gradient(135deg,#ddd6fe,#c4b5fd 55%,#f5d0fe); }
+.section.bg-alt { background: linear-gradient(135deg,#fbfaff 0%,#f4efff 100%); }
+.section.bg-alt::before {
+  background-image: radial-gradient(circle at 25% 50%,rgba(124,58,237,.055) 0%,transparent 50%),radial-gradient(circle at 75% 50%,rgba(91,33,182,.035) 0%,transparent 50%);
+}
+.section-title .st-badge { color: #6d28d9; background: #f0eaff; }
+.section-title h2, .cc-content h3 { color: #4c1d95; }
+.cc-icon { color: #6d28d9; background: #f0eaff; }
+.counter-grid { border: 1px solid rgba(91,33,182,.06); }
+.counter-card { min-width: 0; }
+.programs-card, .news-card, .event-card, .gallery-item, .faq-item, .testimonial-card, .teacher-card, .achievement-card {
+  border-color: #e8e2f2;
+}
+.pc-icon, .news-card .nc-icon { color: #6d28d9; background: #f0eaff; }
+.footer { background: linear-gradient(135deg,#21103f 0%,#30105c 100%); }
+.footer-shape { background: linear-gradient(90deg,#7c3aed,#a78bfa,#f59e0b); }
+.footer-brand .logo i, .footer-brand .logo .highlight { color: #c4b5fd; }
+.footer-col a:hover, .footer-bottom a { color: #c4b5fd; }
+.back-to-top { background: #6d28d9; }
+.back-to-top:hover { background: #4c1d95; }
+
+/* Jika data kepala sekolah belum dimasukkan, hero menjadi satu kolom dan tidak menampilkan avatar contoh. */
+.hero-grid--single { grid-template-columns: minmax(0,1fr); }
+.hero-grid--single .hero-content { max-width: 900px; width: 100%; margin: 0 auto; text-align: center; }
+.hero-grid--single .hero-content p { margin-left: auto; margin-right: auto; }
+.hero-grid--single .hero-buttons, .hero-grid--single .hero-meta { justify-content: center; }
+.hero-grid--single .hero-content h1 { max-width: 900px; margin-left: auto; margin-right: auto; }
+.hero-grid--single .hero-meta { border-top-color: rgba(255,255,255,.2); }
+
+/* Kerapian aset profil sementara; ganti placeholder dengan foto sekolah resmi sebelum publikasi. */
+.ai-main img { object-fit: cover; background: #f3edff; }
+
+@media (max-width: 768px) {
+  .header-top-inner { gap: 8px; flex-wrap: wrap; }
+  .header-top-left { gap: 10px; flex-wrap: wrap; }
+  .hero { min-height: auto; padding: 72px 0 88px; }
+  .hero-grid { grid-template-columns: minmax(0,1fr); gap: 32px; }
+  .hero-grid--single .hero-content { text-align: left; }
+  .hero-grid--single .hero-buttons, .hero-grid--single .hero-meta { justify-content: flex-start; }
+  .counter-grid { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 20px 14px; gap: 10px; }
+  .counter-card { padding: 8px 4px; gap: 10px; }
+  .counter-card:not(:last-child)::after { display: none; }
+  .cc-icon { width: 42px; height: 42px; min-width: 42px; border-radius: 12px; }
+  .cc-content h3 { font-size: 1.25rem; }
+}
+@media (max-width: 420px) {
+  .hero-buttons { gap: 10px; }
+  .hero-buttons .btn { padding: 12px 17px; font-size: .82rem; }
+  .hero-meta { gap: 16px; }
+}

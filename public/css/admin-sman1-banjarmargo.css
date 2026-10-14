@@ -1,0 +1,93 @@
+/* Dashboard admin SMAN 1 Banjar Margo: sidebar hitam, aksen ungu. */
+:root {
+  --school-purple: #7c3aed;
+  --school-purple-soft: #c4b5fd;
+  --school-sidebar: #101014;
+  --school-sidebar-border: #29252f;
+}
+body.small { background: #f7f6fb; color: #201a2c; }
+#sidebar.sidebar, #sidebar.sidebar-dark {
+  background: var(--school-sidebar) !important;
+  color: #f5f3f8 !important;
+  border-right: 1px solid var(--school-sidebar-border) !important;
+  --cui-sidebar-bg: var(--school-sidebar);
+  --cui-sidebar-color: #f5f3f8;
+  --cui-sidebar-border-color: var(--school-sidebar-border);
+  --cui-sidebar-nav-link-color: #c9c4d1;
+  --cui-sidebar-nav-link-hover-color: #fff;
+  --cui-sidebar-nav-link-hover-bg: rgba(255,255,255,.055);
+  --cui-sidebar-nav-link-active-color: #fff;
+  --cui-sidebar-nav-link-active-bg: rgba(124,58,237,.22);
+}
+#sidebar .sidebar-header, #sidebar .sidebar-footer { background: #101014 !important; border-color: #29252f !important; }
+#sidebar .sidebar-brand-full, #sidebar .sidebar-brand-narrow { color: #fff !important; }
+#sidebar .sidebar-brand-narrow i { color: #c4b5fd !important; }
+#sidebar .sidebar-nav .nav-title { color: #8e879a !important; text-transform: uppercase; letter-spacing: .11em; font-size: .66rem; font-weight: 700; padding: 1rem .85rem .4rem; }
+#sidebar .sidebar-nav .nav-link { color: #c9c4d1 !important; border-left: 3px solid transparent; margin: 2px 8px; border-radius: 8px !important; transition: background .15s ease,color .15s ease; }
+#sidebar .sidebar-nav .nav-link .nav-icon { color: #a8a0b5 !important; }
+#sidebar .sidebar-nav .nav-link:hover { color: #fff !important; background: rgba(255,255,255,.06) !important; }
+#sidebar .sidebar-nav .nav-link:hover .nav-icon { color: #c4b5fd !important; }
+#sidebar .sidebar-nav .nav-link.active { color: #fff !important; border-left-color: #8b5cf6 !important; background: linear-gradient(90deg,rgba(124,58,237,.34),rgba(124,58,237,.09)) !important; font-weight: 700; }
+#sidebar .sidebar-nav .nav-link.active .nav-icon { color: #c4b5fd !important; }
+#sidebar .sidebar-toggler { background-color: #201b2a !important; }
+.wrapper > .header { background: #fff !important; border-color: #e9e4f0 !important; box-shadow: 0 2px 12px rgba(31,20,52,.035); }
+.wrapper > .main { background: #f7f6fb !important; }
+.wrapper > .footer { background: #fff !important; border-color: #e9e4f0 !important; }
+.btn-primary, .bg-primary { background-color: #6d28d9 !important; border-color: #6d28d9 !important; }
+.btn-outline-primary { color: #6d28d9 !important; border-color: #8b5cf6 !important; }
+.btn-outline-primary:hover { color: #fff !important; background: #6d28d9 !important; }
+.badge.bg-primary { background: #6d28d9 !important; }
+.card { border-color: #e8e2f1 !important; box-shadow: 0 6px 22px rgba(46,16,101,.045) !important; }
+.card-header { border-color: #ece7f3 !important; }
+.form-control:focus, .form-select:focus { border-color: #a78bfa !important; box-shadow: 0 0 0 .2rem rgba(124,58,237,.14) !important; }
+.table-crud thead th { color: #514666 !important; }
+@media (max-width: 767.98px) {
+  .wrapper > .main { padding: 1rem !important; }
+  .wrapper > .header { padding-inline: 1rem !important; }
+  .wrapper > .header .btn { font-size: .75rem; }
+}
+
+
+/* Penyempurnaan sidebar berdasarkan uji lokal SMAN 1 Banjar Margo */
+#sidebar .sidebar-brand {
+  min-width: 0;
+  width: 100%;
+  padding-inline: .55rem;
+}
+#sidebar .sidebar-brand-full {
+  min-width: 0 !important;
+  width: 100%;
+  font-size: .76rem !important;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+}
+#sidebar .sidebar-brand-full .text-truncate {
+  max-width: 100%;
+  min-width: 0;
+  font-size: inherit;
+  letter-spacing: inherit;
+  white-space: nowrap;
+}
+#sidebar .sidebar-header {
+  min-height: 3.25rem;
+}
+#sidebar .sidebar-nav .nav-link {
+  font-size: .82rem;
+  line-height: 1.25;
+}
+#sidebar .sidebar-nav .nav-link .nav-icon {
+  flex: 0 0 1rem;
+  text-align: center;
+}
+.wrapper > .main {
+  min-width: 0;
+  overflow-x: clip;
+}
+.table-responsive {
+  max-width: 100%;
+}
+@media (max-width: 767.98px) {
+  #sidebar .sidebar-brand-full { font-size: .78rem !important; }
+  .wrapper > .main { overflow-x: hidden; }
+  .table-responsive { overflow-x: auto; }
+}

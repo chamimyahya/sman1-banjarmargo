@@ -1,0 +1,31 @@
+
+# Konfigurasi rahasia
+/.env
+/.env.*
+!/.env.example
+
+# Dependensi
+/vendor/
+/node_modules/
+
+# Cache, log, sesi, dan unggahan runtime
+/writable/cache/*
+/writable/debugbar/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+
+# Database dump dan cadangan
+/*.sql
+/UPGRADE.sql
+*.bak
+*.zip
+*.log
+
+
+# Cache dan laporan hasil pengujian
+/build/
+
+# File unggahan pengguna tidak masuk repository
+/public/uploads/*
+!/public/uploads/.htaccess
